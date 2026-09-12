@@ -8,7 +8,7 @@
 
 ## 🏛️ 1. Bối cảnh & Vai trò
 
-Tôi là **Quang Dũng**, AI Product Engineer tại **Vin Smart Future**. Đơn vị chúng tôi được giao trọng trách nghiên cứu giải pháp AI giúp nâng cao chất lượng vận hành dịch vụ đô thị thông minh cho **Vinhomes**.
+Nhóm chúng tôi được giao trọng trách nghiên cứu giải pháp AI giúp nâng cao chất lượng vận hành dịch vụ đô thị thông minh cho **Vinhomes**.
 
 Khảo sát thực địa tại Ban Quản lý các đại đô thị Vinhomes (Vinhomes Ocean Park, Smart City, Grand Park), mỗi ngày hệ thống ứng dụng **Vinhomes Resident** tiếp nhận từ 1,500 đến 2,500 phản ánh và yêu cầu từ cư dân. Đội ngũ Chăm sóc Cư dân (CSKH) đang đối mặt với một áp lực khổng lồ khi phải giải quyết đồng thời hai nhóm việc hoàn toàn khác nhau:
 1. **Xử lý sự cố kỹ thuật / Khiếu nại thực địa:** Rò rỉ nước, chập điện, kẹt thang máy, đỗ xe bừa bãi, làm ồn ban đêm (cần điều thợ kỹ thuật/bảo vệ chạy tới căn hộ).
