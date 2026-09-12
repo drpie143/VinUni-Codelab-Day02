@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="850" viewBox="0 0 1400 850">
+  <rect width="1400" height="850" fill="#f7f8fa"/>
+  <text x="700" y="50" text-anchor="middle" font-family="Arial" font-size="28" font-weight="bold" fill="#16324f">Vinhomes Resident Service Copilot - Current-State Workflow</text>
+  <text x="700" y="82" text-anchor="middle" font-family="Arial" font-size="16" fill="#52606d">Baseline giả định: 9-20 phút/yêu cầu | 🔴 bottleneck | 🔄 handoff</text>
+  <g font-family="Arial" font-size="16" fill="#16324f" stroke="#16324f" stroke-width="2">
+    <rect x="55" y="170" width="220" height="150" rx="8" fill="#d9edf7"/>
+    <rect x="335" y="170" width="230" height="150" rx="8" fill="#ffe8cc"/>
+    <rect x="625" y="170" width="240" height="150" rx="8" fill="#ffe8cc"/>
+    <rect x="925" y="120" width="210" height="150" rx="8" fill="#e8f5e9"/>
+    <rect x="925" y="350" width="210" height="150" rx="8" fill="#e8f5e9"/>
+    <rect x="1200" y="235" width="150" height="150" rx="8" fill="#d9edf7"/>
+  </g>
+  <g font-family="Arial" font-size="17" fill="#16324f" text-anchor="middle">
+    <text x="165" y="205" font-weight="bold">1. Cư dân gửi yêu cầu</text><text x="165" y="235">App / điện thoại / quầy</text><text x="165" y="270">1-2 phút</text><text x="165" y="300">Cư dân</text>
+    <text x="450" y="205" font-weight="bold">2. Đọc và phân loại</text><text x="450" y="235">Khiếu nại hay thủ tục?</text><text x="450" y="270">3-5 phút 🔴</text><text x="450" y="300">CSKH</text>
+    <text x="745" y="205" font-weight="bold">3. Hỏi bổ sung</text><text x="745" y="235">Tòa, căn hộ, ảnh, hồ sơ</text><text x="745" y="270">2-5 phút 🔴</text><text x="745" y="300">CSKH / cư dân</text>
+    <text x="1030" y="155" font-weight="bold">4A. Chuyển khiếu nại</text><text x="1030" y="185">Kỹ thuật / an ninh</text><text x="1030" y="215">/ dịch vụ</text><text x="1030" y="250">1-3 phút</text>
+    <text x="1030" y="385" font-weight="bold">4B. Tra cứu thủ tục</text><text x="1030" y="415">Điều kiện, biểu mẫu</text><text x="1030" y="445">8-12 phút 🔴</text><text x="1030" y="480">CSKH</text>
+    <text x="1275" y="270" font-weight="bold">5. Phản hồi</text><text x="1275" y="300">Cập nhật trạng thái</text><text x="1275" y="330">hoặc checklist</text><text x="1275" y="365">2-5 phút</text>
+  </g>
+  <g stroke="#52606d" stroke-width="3" fill="none" marker-end="url(#arrow)">
+    <path d="M275 245 H335"/><path d="M565 245 H625"/><path d="M865 225 H925"/><path d="M865 270 C900 300 900 425 925 425"/><path d="M1135 195 C1170 195 1170 280 1200 280"/><path d="M1135 425 C1170 425 1170 340 1200 340"/>
+  </g>
+  <g font-family="Arial" font-size="14" fill="#b42318" text-anchor="middle"><text x="305" y="225">🔄 handoff</text><text x="595" y="225">🔄 handoff</text><text x="1165" y="180">🔄 handoff</text></g>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#52606d"/></marker></defs>
+  <rect x="250" y="610" width="900" height="105" rx="8" fill="#fff4e5" stroke="#b54708" stroke-width="2"/>
+  <text x="700" y="645" text-anchor="middle" font-family="Arial" font-size="19" font-weight="bold" fill="#8a2c0d">Bottleneck chính</text>
+  <text x="700" y="678" text-anchor="middle" font-family="Arial" font-size="17" fill="#16324f">Phân loại sai, thiếu dữ liệu và tra cứu tài liệu thủ công làm yêu cầu chuyển qua lại.</text>
+  <text x="700" y="703" text-anchor="middle" font-family="Arial" font-size="16" fill="#52606d">Tổng thời gian baseline: 9-20 phút/yêu cầu</text>
+</svg>
