@@ -1,0 +1,23 @@
+%% Vinhomes Resident Service Copilot — Current-State Workflow
+%% Render: https://mermaid.live  (dán nội dung này, Export ra PNG -> lưu 04-workflow-diagram.png)
+%% Ký hiệu: 🔴 Bottleneck | 🔄 Handoff
+
+flowchart TD
+    A["👤 Cư dân gửi yêu cầu/khiếu nại<br/>trong app (free-text)"] --> B
+
+    B["🔴 CSKH đọc & PHÂN LOẠI thủ công<br/>⏱ ~4 phút · dễ sai khi mô tả mơ hồ"]
+    B -->|"🔄 Handoff: CSKH → bộ phận"| C
+
+    C["🔴 Định tuyến sang đúng bộ phận<br/>(Kỹ thuật / An ninh / Tài chính / BQL)<br/>⏱ ~2 phút · route sai phải chuyển lại"] --> D
+
+    D["🔴 Soạn tay phản hồi / tra cứu thủ tục<br/>⏱ ~10 phút · BOTTLENECK NẶNG NHẤT<br/>phản hồi rập khuôn"]
+    D -->|"🔄 Handoff: nhân viên → cấp trên"| E
+
+    E["Cấp trên duyệt (nội dung nhạy cảm:<br/>phí, tranh chấp) → gửi cư dân<br/>⏱ ~2 phút"] --> F
+
+    F["📩 Cư dân nhận phản hồi<br/><b>Tổng ≈ 18 phút/lượt</b>"]
+
+    classDef bottleneck fill:#ffdddd,stroke:#c0392b,stroke-width:2px,color:#000;
+    classDef normal fill:#eef,stroke:#3355aa,color:#000;
+    class B,C,D bottleneck;
+    class A,E,F normal;
