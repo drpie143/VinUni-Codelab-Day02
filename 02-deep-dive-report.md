@@ -1,6 +1,6 @@
 # 02 — Problem Deep-Dive Report: Vin Smart Future
 
-**Dự án:** Hệ thống AI Tiếp nhận, Phân loại & Điều hướng Báo cáo Phản ánh Cư dân (Vinhomes Resident Feedback Dispatcher)  
+**Dự án:** Vinhomes Resident Service Copilot — Hệ thống AI Tiếp nhận, Phân loại kép & Điều phối Dịch vụ Cư dân  
 **Đơn vị áp dụng:** Vinhomes — Phối hợp cùng Vin Smart Future  
 **Học viên thực hiện:** Quang Dũng
 
@@ -8,100 +8,109 @@
 
 ## 🏛️ 1. Bối cảnh & Vai trò
 
-Tôi là **Quang Dũng**, AI Product Engineer tại **Vin Smart Future**. Đơn vị chúng tôi được giao trọng trách nghiên cứu giải pháp AI giúp tối ưu hóa công tác quản lý vận hành đô thị cho **Vinhomes** — nhà phát triển bất động sản đô thị thông minh hàng đầu Việt Nam.
+Tôi là **Quang Dũng**, AI Product Engineer tại **Vin Smart Future**. Đơn vị chúng tôi được giao trọng trách nghiên cứu giải pháp AI giúp nâng cao chất lượng vận hành dịch vụ đô thị thông minh cho **Vinhomes**.
 
-Khảo sát thực tế tại Ban Quản lý các đại đô thị Vinhomes (Vinhomes Ocean Park, Smart City, Grand Park), mỗi ngày hệ thống ứng dụng **Vinhomes Resident** tiếp nhận hàng nghìn phản ánh, khiếu nại từ cư dân. Các nội dung trải dài từ sự cố hạ tầng kỹ thuật (mất nước, rò rỉ đường ống, chập điện, kẹt thang máy), vi phạm trật tự an ninh (đỗ xe sai quy định, làm ồn ban đêm) đến thắc mắc về phí dịch vụ.
+Khảo sát thực địa tại Ban Quản lý các đại đô thị Vinhomes (Vinhomes Ocean Park, Smart City, Grand Park), mỗi ngày hệ thống ứng dụng **Vinhomes Resident** tiếp nhận từ 1,500 đến 2,500 phản ánh và yêu cầu từ cư dân. Đội ngũ Chăm sóc Cư dân (CSKH) đang đối mặt với một áp lực khổng lồ khi phải giải quyết đồng thời hai nhóm việc hoàn toàn khác nhau:
+1. **Xử lý sự cố kỹ thuật / Khiếu nại thực địa:** Rò rỉ nước, chập điện, kẹt thang máy, đỗ xe bừa bãi, làm ồn ban đêm (cần điều thợ kỹ thuật/bảo vệ chạy tới căn hộ).
+2. **Giải đáp & Hướng dẫn thủ tục hành chính:** Đăng ký thi công nội thất, cấp thẻ cư dân, đăng ký vé xe tháng, giải thích biểu phí quản lý (cần lật tìm Sổ tay Cư dân và gửi form đăng ký).
 
-Hiện nay, đội ngũ Chăm sóc Cư dân (CSKH) phải đọc thủ công từng ticket, phân loại chuyên mục và gán thủ công cho từng kỹ thuật viên/bảo vệ phụ trách block tòa nhà, sau đó tự viết tay câu trả lời phản hồi cho cư dân. Quy trình thủ công này gây nghẽn nghiêm trọng, làm chậm trễ thời gian xử lý sự cố và ảnh hưởng tiêu cực tới chỉ số hài lòng (CSAT) của cư dân Vinhomes.
+Hiện tại, toàn bộ quy trình này được vận hành thủ công, dẫn đến độ trễ phản hồi ban đầu kéo dài từ 2 đến 12 tiếng vào giờ cao điểm, gây bức xúc cho cư dân và làm quá tải nhân sự trực ban.
 
 ---
 
 ## 🏗️ 2. Phase 3 — DEEP-DIVE
 
-### 3.1. Current-State Workflow Mapping (Quy trình vận hành hiện tại)
+### 3.1. Current-State Workflow Mapping (Đồng bộ 100% với Sơ đồ 04)
 
-Quy trình xử lý thủ công một phản ánh của cư dân hiện gồm 5 bước tuần tự:
+Quy trình vận hành thủ công hiện tại gồm 5 bước tuần tự như sau:
 
 ```text
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│ Bước 1          │       │ Bước 2          │       │ Bước 3          │       │ Bước 4          │
-│ Cư dân gửi      │       │ Đọc hiểu &      │       │ Tra cứu & Gán   │       │ Soạn tin nhắn   │
-│ phản ánh trên   │ ────> │ phân loại nhãn  │ ────> │ bộ phận xử lý   │ ────> │ phản hồi xác    │
-│ App Vinhomes    │  🔄   │ sự cố           │  🔄   │ theo block nhà  │  🔄   │ nhận cho cư dân │
-│                 │       │                 │       │                 │       │                 │
+│ BƯỚC 01         │       │ BƯỚC 02         │       │ BƯỚC 03         │       │ BƯỚC 04         │
+│ Tiếp nhận đa    │       │ Đọc & Phân loại │       │ Tra cứu &       │       │ Soạn tin &      │
+│ kênh (App/Call) │ ────> │ kép (Sự cố vs   │ ────> │ Điều phối       │ ────> │ Phản hồi cư dân │
+│                 │  🔄   │ Thủ tục)        │  🔄   │ (KTV / Sổ tay)  │  🔄   │                 │
 │ Actor: Cư dân   │       │ Actor: CSKH     │       │ Actor: CSKH     │       │ Actor: CSKH     │
-│ Thời gian: 2 phút       │ Thời gian: 5 phút 🔴    │ Thời gian: 4 phút       │ Thời gian: 6 phút 🔴
-│ In: Text/Ảnh sự cố      │ In: Nội dung ticket     │ In: Danh bạ kỹ thuật    │ In: Thông tin tiếp nhận
-│ Out: Ticket thô │       │ Out: Category/Priority  │ Out: Ticket gán KTV     │ Out: Tin nhắn xác nhận
+│ Thời gian: 2 phút       │ Thời gian: 6 phút 🔴    │ Thời gian: 4 phút       │ Thời gian: 6 phút 🔴
+│ In: Text / Ảnh lỗi      │ In: Đọc hiểu văn bản    │ In: Danh bạ / Quy chế   │ In: Mẫu phản hồi
+│ Out: Ticket thô │       │ Out: Tag & SLA  │       │ Out: Gán KTV / Form     │ Out: SMS / App Driver
 └─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
-                                                                                       │
-                                                                                       ▼
-                                                                              ┌─────────────────┐
-                                                                              │ Bước 5          │
-                                                                              │ Kích hoạt quy   │
-                                                                              │ trình khẩn cấp  │
-                                                                              │ (nếu cháy/kẹt)  │
-                                                                              │                 │
-                                                                              │ Actor: CSKH     │
-                                                                              │ Thời gian: 1 phút
-                                                                              │ Out: Báo động BQL
-                                                                              └─────────────────┘
+                                   │
+                                   │ (Nếu phát hiện nguy cơ khẩn cấp)
+                                   ▼
+                          ┌─────────────────────────────────────────────────────────────┐
+                          │ BƯỚC 05: ĐIỀU PHỐI CỨU HỘ KHẨN CẤP (🚨 EMERGENCY DISPATCH)   │
+                          │ Actor: Hotline BQL & Kỹ thuật trưởng 24/7  |  ⏱ < 30 GIÂY    │
+                          │ Out: Còi báo động, điều xe cứu hộ kỹ thuật, sơ tán khẩn cấp │
+                          └─────────────────────────────────────────────────────────────┘
 
 Ký hiệu:
-- 🔄 Handoff: Điểm chuyển giao thông tin giữa cư dân -> CSKH -> Danh bạ vận hành -> Kỹ thuật viên hiện trường.
-- 🔴 Bottleneck: Bước 2 (Đọc & phân loại nhãn) và Bước 4 (Soạn văn bản phản hồi chuẩn mực cho cư dân), chiếm 11/18 phút.
-- ⏱ Tổng thời gian xử lý thủ công ban đầu trung bình: 18 phút/ticket.
-- Thời gian chờ thực tế của cư dân: Từ 2 đến 12 tiếng vào giờ cao điểm.
+- 🔴 Bottleneck: Bước 02 & Bước 04 chiếm 12/18 phút (67% tổng thời gian xử lý ban đầu).
+- 🔄 3x Handoffs: Chuyển giao dữ liệu thủ công giữa Cư dân -> CSKH -> Danh bạ KTV / Sổ tay -> KTV hiện trường.
+- ⏱ Tổng thời gian thao tác thủ công: 18 phút/ticket. Thời gian chờ thực tế: 2 - 12 tiếng.
 ```
 
 ---
 
-### 3.2. Problem Statement (6-field) — Chuẩn Vin Smart Future
+### 🔍 3.2. Bảng Phân Tích & Đề Xuất Cải Tiến AI Cho Từng Bước Quy Trình
+
+Dưới đây là phương án cải tiến chi tiết từng bước nhằm xóa bỏ điểm nghẽn và tự động hóa các điểm chuyển giao (Handoffs):
+
+| Bước trong Quy trình | Thực trạng thủ công (Current-State) & Điểm yếu | Giải pháp cải tiến bằng AI (AI Enhancement) | Tác động vận hành (Business Impact) |
+| :--- | :--- | :--- | :--- |
+| **BƯỚC 01: Tiếp nhận đa kênh** | Cư dân gửi text tự do, ảnh lỗi rời rạc trên App/Zalo/Hotline. Dữ liệu chưa chuẩn hóa, nhân viên phải hỏi đi hỏi lại mã căn hộ và block nhà. | **Multimodal Input & Auto-Context:**<br>- Tự động trích xuất mã căn hộ, tầng, block từ tài khoản đăng nhập App.<br>- Vision AI tự động nhận diện ảnh chụp (ví dụ: phát hiện vết nứt tường, vỡ đường ống nước, xe đỗ sai vạch).<br>- Speech-to-Text chuyển đổi tin nhắn thoại của cư dân thành văn bản. | Cư dân không phải nhập lại thông tin cá nhân. Chuẩn hóa 100% dữ liệu đầu vào ngay từ giây đầu tiên. |
+| **BƯỚC 02: Đọc & Phân loại kép (🔴 Bottleneck)** | Nhân viên CSKH đọc thủ công (mất 6 phút), dễ gán nhầm chuyên mục do cư dân viết tắt hoặc dùng tiếng lóng. Không phân biệt được tính cấp bách. | **Dual-Stream NLP Classifier & Sentiment Analysis:**<br>- **Luồng A (Sự cố):** Phân loại cây sự cố (Điện, Nước, Thang máy, An ninh) kèm cấp độ khẩn cấp (SLA 1 - 4).<br>- **Luồng B (Thủ tục):** Nhận diện loại thủ tục (Thi công, làm thẻ xe, đăng ký thang máy hàng).<br>- **Phân tích cảm xúc:** Nhận diện cư dân đang bức xúc để gắn cờ ưu tiên chăm sóc đặc biệt. | Rút ngắn thời gian đọc và phân loại từ 6 phút xuống **dưới 3 giây**. Độ chính xác phân loại đạt **$\ge 96\%$**. |
+| **BƯỚC 03: Tra cứu & Điều phối (🔄 Handoffs)** | CSKH mở file Excel tìm xem thợ nào trực block nhà đó, hoặc lật Sổ tay Cư dân tìm file biểu mẫu (mất 4 phút qua 3 màn hình rời rạc). Dễ gán nhầm thợ. | **Automated Dispatching API & RAG Knowledge Retrieval:**<br>- **Nếu Sự cố:** API tự động đối chiếu lịch trực KTV thời gian thực $\rightarrow$ gán thẳng ticket cho KTV đang rảnh nhất ở block đó.<br>- **Nếu Thủ tục:** RAG (Retrieval-Augmented Generation) tra cứu chính xác điều khoản trong Sổ tay Cư dân và tự động gắp link biểu mẫu đăng ký online. | Xóa bỏ hoàn toàn 3 điểm Handoff thủ công. Giảm thời gian điều chuyển từ 4 phút xuống **tức thì (< 2s)**. |
+| **BƯỚC 04: Soạn tin & Phản hồi (🔴 Bottleneck)** | CSKH gõ tay từng câu trả lời cho cư dân (mất 6 phút), văn phong không đồng bộ, dễ sai sót thông tin cam kết hoặc quên đính kèm hướng dẫn. | **Generative Response Draft & 1-Click HITL Approval:**<br>- AI soạn sẵn tin nhắn phản hồi chuẩn văn phong Vinhomes 5 sao mang tiền tố `[DRAFT_ONLY]`.<br>- Tự động điền thời gian dự kiến thợ đến hoặc tóm tắt 3 bước làm thủ tục kèm form tải.<br>- **Human-in-the-loop:** Nhân viên CSKH chỉ cần 10 giây đọc lướt và bấm nút Duyệt gửi. | Rút ngắn thời gian soạn tin từ 6 phút xuống **dưới 15 giây**. Đảm bảo chuẩn mực dịch vụ cao cấp, không lo AI phát ngôn bừa bãi. |
+| **BƯỚC 05: Điều phối cứu hộ khẩn cấp** | Các tin báo khẩn cấp (mùi khét, vỡ ống nước ngập sàn, kẹt thang máy) bị lẫn trong hàng nghìn ticket thường, có nguy cơ bị chậm trễ gây thảm họa. | **Zero-Latency Priority Bypass Guardrail:**<br>- AI kích hoạt rule an toàn tức thì khi phát hiện từ khóa nguy cấp.<br>- Bỏ qua hàng chờ thông thường, rung chuông báo động tại Phòng Điều khiển Trung tâm và tự động gọi hotline Kỹ thuật trưởng 24/7 trong **< 30 giây**. | Giảm thiểu 100% rủi ro thiệt hại về người và tài sản. Phản ứng khẩn cấp tức thì. |
+
+---
+
+### 3.3. Problem Statement (6-field) — Chuẩn Vin Smart Future
 
 | Trường thông tin | Nội dung chi tiết |
 |---|---|
 | **1. Actor / Operator** | Nhân viên Chăm sóc Cư dân (CSKH) và Trưởng ca Quản lý Vận hành Tòa nhà tại các Khu Đô thị Vinhomes. |
-| **2. Current Workflow** | Cư dân tạo phản ánh trên App Vinhomes Resident. Nhân viên CSKH mở Dashboard quản trị, đọc nội dung tin nhắn, gán nhãn chuyên mục (Kỹ thuật/An ninh/Cảnh quan/Phí), tra cứu phân công nhân sự theo ca trực và tòa nhà, sau đó tự gõ câu trả lời tiếp nhận gửi lại cho cư dân. Quy trình kéo dài trung bình 18 phút/ticket và lên tới hàng giờ khi lượng phản ánh quá tải. |
-| **3. Bottleneck** | **Bước 2 & 4 (chiếm hơn 60% thời gian):** Đọc hiểu mô tả không có cấu trúc của cư dân (đôi khi viết tắt, cảm xúc bức xúc), phân tích mức độ ưu tiên và soạn thảo văn bản phản hồi đúng quy chuẩn văn phong dịch vụ chuẩn Vinhomes 5 sao. |
-| **4. Business Impact** | Mỗi đại đô thị tiếp nhận trung bình 1,500 - 2,500 tickets/tuần. Thời gian phản hồi chậm dẫn đến tỷ lệ khiếu nại leo thang (escalation) tăng 25%, cư dân gọi điện dồn dập lên tổng đài gây nghẽn đường dây nóng; nguy cơ xử lý chậm các sự cố hạ tầng kỹ thuật (vỡ ống nước, kẹt thang máy) gây thiệt hại lớn về tài sản. |
-| **5. Success Metric** | 1. **Tốc độ phản hồi ban đầu:** Rút ngắn thời gian từ 2-4 tiếng xuống **dưới 3 phút/ticket**.<br>2. **Độ chính xác phân loại:** Tỉ lệ phân loại đúng chuyên mục sự cố và gán đúng tổ kỹ thuật đạt **>= 96%**.<br>3. **An toàn & Cảnh báo khẩn cấp:** 100% phản ánh mang tính nguy cấp (cháy, ngập nước nghiêm trọng, kẹt thang máy, bạo lực) được phát hiện và kích hoạt chuông báo động tới Kỹ thuật trưởng trong vòng **dưới 30 giây**. |
-| **6. Operational Boundary** | **Phạm vi cho phép:** AI được đọc nội dung ticket, gắn tag phân loại, trích xuất căn hộ/vị trí, và soạn thảo tin nhắn xác nhận tiếp nhận dạng nháp (Draft).<br>**Ranh giới cấm tuyệt đối (STRICT):**<br>- Mọi tin nhắn phản hồi cư dân do AI soạn thảo **BẮT BUỘC** phải có tag tiền tố `[DRAFT_ONLY]` để nhân viên CSKH duyệt trước khi gửi (Tuyệt đối không để AI tự động gửi tin ra ngoài khi chưa có Human-in-the-loop).<br>- AI **TUYỆT ĐỐI KHÔNG** được hứa hẹn bồi thường tài chính, không cam kết thời gian hoàn thành vượt quá SLA, và không được xếp hàng xử lý thông thường nếu phát hiện dấu hiệu đe dọa tính mạng/an toàn cư dân. |
+| **2. Current Workflow** | Cư dân tạo phản ánh trên App Vinhomes Resident. Nhân viên CSKH đọc nội dung, tự phân loại thành Sự cố kỹ thuật hoặc Hỏi đáp thủ tục, mở phần mềm tra cứu KTV hoặc mở Sổ tay Cư dân, sau đó tự gõ câu trả lời tiếp nhận gửi lại cho cư dân. Toàn bộ qua 5 bước thủ công, tốn 18 phút/ticket và gây trễ 2 - 12 tiếng khi quá tải. |
+| **3. Bottleneck** | **Bước 02 & Bước 04 (chiếm 67% thời gian):** Đọc hiểu phân loại kép và gõ tay soạn thảo văn bản phản hồi cá nhân hóa đúng chuẩn mực 5 sao của Vinhomes. |
+| **4. Business Impact** | Mỗi đại đô thị tiếp nhận 1,500 - 2,500 tickets/tuần. Thời gian chờ lâu khiến tỷ lệ khiếu nại leo thang tăng 25%, quá tải tổng đài cuộc gọi; nguy cơ xử lý chậm sự cố ngập nước hoặc kẹt thang máy gây tổn thất tài sản hàng tỷ đồng. |
+| **5. Success Metric** | 1. **Thời gian phản hồi:** Rút ngắn thời gian xử lý ban đầu từ 2-4 tiếng xuống **dưới 2 phút/ticket**.<br>2. **Độ chính xác phân loại kép:** Đạt **$\ge 96\%$** cho cả nhánh sự cố kỹ thuật và thủ tục hành chính.<br>3. **Cảnh báo khẩn cấp:** 100% sự cố khẩn cấp (cháy, ngập nước nghiêm trọng, kẹt thang máy) được kích hoạt báo động trong **dưới 30 giây**. |
+| **6. Operational Boundary** | **Phạm vi cho phép:** AI được đọc ticket, phân loại tag, gán KTV gợi ý, tra cứu Sổ tay Cư dân và soạn thảo tin nhắn nháp.<br>**Ranh giới cấm nghiêm ngặt (STRICT):**<br>- Mọi tin nhắn gửi cho cư dân **BẮT BUỘC** phải có tag `[DRAFT_ONLY]` để nhân viên CSKH duyệt trước (Bắt buộc Human-in-the-loop).<br>- AI **TUYỆT ĐỐI KHÔNG** được hứa hẹn bồi thường tài chính, không tự ý cam kết đền bù khi chưa có kết luận của Trưởng ban quản lý.<br>- Gặp sự cố đe dọa an toàn tính mạng, AI bắt buộc kích hoạt còi báo động Bước 05 tức thì, không xếp vào hàng chờ thường. |
 
 ---
 
-### 3.3. Future-State Flow & AI Fit Matrix
+### 3.4. Future-State Flow & Kiến trúc AI Fit
 
 #### A. Phân tích AI-Fit:
-* **Rule-based (Regex/Từ khóa):** Dễ bỏ sót khi cư dân dùng tiếng lóng, viết tắt hoặc mô tả gián tiếp (ví dụ: *"hành lang tầng 8 đang có mùi khét lẹt"* -> Rule khó nhận diện chính xác mức độ khẩn cấp).
-* **Autonomous Agent (Tác tử tự hành):** Quá rủi ro nếu để Agent tự động chốt phương án bồi thường hoặc tự động đóng ticket cư dân mà không có con người kiểm tra.
-* **Lựa chọn tối ưu:** **LLM Feature kết hợp Human-in-the-loop (Co-pilot cho CSKH Vinhomes).** Mô hình LLM (Gemini 2.5 Flash) xử lý hiểu ngôn ngữ tự nhiên, phân loại tag và soạn nháp; nhân viên CSKH chỉ cần 1 click để kiểm tra và phê duyệt.
+* **Rule-based (Regex):** Không thể hiểu được ngôn ngữ tự nhiên đa dạng, tiếng lóng, ngữ cảnh cảm xúc của cư dân.
+* **Autonomous Agent (Tự trị hoàn toàn):** Quá rủi ro nếu để Agent tự động cam kết đền bù hoặc tự đóng ticket khi chưa giải quyết xong.
+* **Lựa chọn tối ưu:** **LLM Feature Co-pilot (Gemini 2.5 Flash + RAG) kết hợp Human-in-the-loop (HITL).**
 
 #### B. Quy trình tương lai (Future-State Flow):
 
 ```text
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-│ Bước 1          │       │ Bước 2          │       │ Bước 3          │       │ Bước 4          │
+│ BƯỚC 01         │       │ BƯỚC 02         │       │ BƯỚC 03         │       │ BƯỚC 04         │
 │ Cư dân gửi      │       │ 🔵 AI Engine    │       │ 🔵 AI Engine    │       │ 🟢 Human Review │
-│ phản ánh trên   │ ────> │ Phân loại tag,  │ ────> │ Gán KTV & Draft │ ────> │ CSKH 1-click    │
-│ App Vinhomes    │       │ mức ưu tiên     │       │ tin [DRAFT_ONLY]│       │ Duyệt & Gửi tin │
+│ ticket đa kênh  │ ────> │ Phân loại kép & │ ────> │ Tự động gán KTV │ ────> │ CSKH 1-click    │
+│ (App/Voice/Pic) │       │ Gán nhãn SLA    │       │ & Tra cứu RAG   │       │ Duyệt [DRAFT]   │
 │                 │       │                 │       │                 │       │                 │
-│ Hệ thống tự động│       │ Gemini 2.5 Flash│       │ Gemini 2.5 Flash│       │ Nhân viên (HITL)│
-│ Thời gian: Tức thì      │ Thời gian: 3s   │       │ Thời gian: 4s   │       │ Thời gian: 20s  │
+│ Hệ thống tự động│       │ Gemini 2.5 Flash│       │ Auto-API & RAG  │       │ Nhân viên (HITL)│
+│ Thời gian: Tức thì      │ Thời gian: 2s   │       │ Thời gian: 2s   │       │ Thời gian: 15s  │
 └─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
-                                                            │
-                                                            ▼ (Nếu sự cố khẩn cấp: Cháy/Kẹt thang)
-                                                   ┌─────────────────┐
-                                                   │ 🔵 AI Báo động  │
-                                                   │ Dispatch Cứu hộ │
-                                                   │ Hotline Khẩn cấp│
-                                                   └─────────────────┘
-                                                            │
-                                                            ▼
-                                                   ↩️ Fallback Strategy:
-                                                   Nếu mô hình AI phản hồi độ tự tin (confidence score)
-                                                   thấp (<85%) hoặc lỗi mạng, hệ thống tự động đẩy ticket
-                                                   vào hàng chờ thủ công truyền thống của CSKH, đảm bảo
-                                                   không một phản ánh nào của cư dân bị thất lạc.
+                                   │
+                                   │ (Nếu phát hiện cháy/kẹt thang/ngập nước)
+                                   ▼
+                          ┌─────────────────────────────────────────────────────────────┐
+                          │ BƯỚC 05: 🔵 BÁO ĐỘNG ĐIỀU PHỐI CỨU HỘ KHẨN CẤP (< 30 GIÂY)  │
+                          │ Tự động kích hoạt còi hú, bypass hàng chờ, gọi Hotline BQL  │
+                          └─────────────────────────────────────────────────────────────┘
+                                   │
+                                   ▼
+                          ↩️ Kế hoạch Fallback:
+                          Nếu AI có độ tự tin < 85% hoặc API gặp sự cố timeout (> 3s),
+                          hệ thống tự động chuyển ticket sang chế độ hàng chờ thủ công
+                          truyền thống của CSKH, đảm bảo không thất lạc bất kỳ phản ánh nào.
 ```
 
 ---
@@ -109,14 +118,13 @@ Ký hiệu:
 ## 🏁 3. Phase 5 — EVALUATE: Quyết định triển khai
 
 ### AI Readiness Checklist:
-1. **Dữ liệu & API:** ✅ Hệ thống Vinhomes Resident có sẵn dữ liệu hàng trăm nghìn ticket lịch sử được gán nhãn làm tập mẫu (Few-shot examples).
-2. **Quản trị rủi ro & Ranh giới:** ✅ Đảm bảo 100% tin nhắn có tiền tố `[DRAFT_ONLY]` và luôn qua bước duyệt của nhân viên CSKH (HITL), loại bỏ hoàn toàn rủi ro AI phát ngôn sai lệch.
-3. **Mức độ sẵn sàng của Stakeholders:** ✅ Ban Quản lý Vinhomes đang tìm kiếm giải pháp chuyển đổi số để giảm tải áp lực nhân sự cho đội ngũ vận hành tại các khu đô thị lớn.
+1. **Dữ liệu & API:** ✅ Có sẵn hàng trăm nghìn ticket lịch sử trên hệ thống Vinhomes Resident để làm tập mẫu (Few-shot) và Sổ tay Cư dân chính thức để xây dựng RAG.
+2. **Quản trị rủi ro & Ranh giới:** ✅ Cơ chế ranh giới kép: Tag tiền tố `[DRAFT_ONLY]` bắt buộc duyệt con người (HITL) + Kênh báo động khẩn cấp Bước 05 riêng biệt.
+3. **Mức độ sẵn sàng của Stakeholders:** ✅ Ban Quản lý và Khối Dịch vụ Khách hàng Vinhomes đang quyết liệt tìm giải pháp giảm tải ca trực và nâng cao chỉ số hài lòng của cư dân.
 
-### Quyết định cuối cùng:
-👉 **QUYẾT ĐỊNH: [x] GO (Bắt đầu triển khai Prototype)**
+### Quyết định của Ban Dự Án Vin Smart Future:
+👉 **QUYẾT ĐỊNH: [x] GO (Bắt đầu xây dựng Prototype)**
 
 **Lý giải quyết định (Justification):**
-- **Hiệu quả kinh tế & Vận hành:** Cắt giảm hơn 80% thời gian xử lý thủ công ban đầu của CSKH (từ 18 phút xuống dưới 1 phút), nâng cao chỉ số hài lòng của cư dân.
-- **Tính khả thi kỹ thuật:** Năng lực xử lý tiếng Việt của `gemini-2.5-flash` cực kỳ xuất sắc trong việc phân tích sắc thái biểu cảm, trích xuất thực thể (phòng/tầng/sự cố) và draft văn phong trang trọng, lịch thiệp theo chuẩn Vinhomes.
-- **Chi phí tối ưu:** Chi phí API cho mỗi ticket chưa tới 50 VNĐ, mang lại ROI (Return on Investment) vượt trội so với chi phí thuê thêm nhân sự trực ca.
+- **Hiệu quả vượt trội:** Cắt giảm thời gian phản hồi ban đầu từ 2-4 tiếng xuống dưới 2 phút (nhanh gấp 9 lần).
+- **Chi phí & Rủi ro thấp:** Sử dụng mô hình `gemini-2.5-flash` có tốc độ xử lý siêu nhanh, chi phí API cực rẻ (< 50 VNĐ/ticket), luôn có nhân viên kiểm soát đầu ra trước khi gửi tới cư dân.

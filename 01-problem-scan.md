@@ -18,7 +18,7 @@ Quét qua các hoạt động vận hành thực tế tại các công ty thành
 
 | # | Công ty thành viên | Lens áp dụng | Mô tả bài toán & Bottleneck thực tế |
 |---|--------------------|--------------|--------------------------------------|
-| 1 | **Vinhomes** | Tốn thời gian & Pain từ người khác | **Tiếp nhận, phân loại và điều hướng báo cáo phản ánh của cư dân trên App Vinhomes Resident:** Nhân viên CSKH/Ban quản lý phải đọc thủ công hàng trăm phản ánh mỗi ngày (rò rỉ nước, hỏng đèn hành lang, ồn ào, thủ tục phí), phân loại tag sự cố và gán về từng tổ kỹ thuật block tòa nhà, dẫn đến phản hồi ban đầu chậm trễ (từ 2-12 tiếng). |
+| 1 | **Vinhomes** | Tốn thời gian & Pain từ người khác | **Vinhomes Resident Service Copilot (Tiếp nhận, phân loại kép và điều phối phản ánh cư dân):** Nhân viên CSKH/Ban quản lý phải đọc thủ công hàng nghìn phản ánh mỗi ngày, vừa phải phân loại các sự cố kỹ thuật (điện, nước, thang máy, an ninh) để gán thợ, vừa phải tra cứu thủ tục (thi công, thẻ xe, biểu mẫu) để giải thích cho cư dân, dẫn đến thời gian chờ phản hồi kéo dài từ 2 đến 12 tiếng. |
 | 2 | **Vinhomes** | Lặp lại | Soạn thảo câu trả lời và văn bản hướng dẫn thủ tục cư dân (đăng ký thi công nội thất, đăng ký thẻ cư dân/vé gửi xe) lặp đi lặp lại theo biểu mẫu. |
 | 3 | **Xanh SM (GSM)** | Tốn thời gian | Điều phối viên xử lý thủ công các báo cáo khẩn cấp từ tài xế về sự cố cạn kiệt pin hoặc tìm trạm sạc trống tương thích gần nhất. |
 | 4 | **VinFast** | Lặp lại | Đối chiếu và so khớp dữ liệu hóa đơn sạc điện từ các trạm sạc đối tác công cộng với mức điện năng thực tế của xe theo tuần. |
@@ -33,35 +33,42 @@ Chọn **top 3 bài toán tiềm năng nhất** để phân tích sơ bộ:
 
 ---
 
-### 🎴 Thẻ bài toán #1 (LỰA CHỌN CHÍNH): Vinhomes — Tiếp nhận & Xử lý Báo cáo Phản ánh của Cư dân
+### 🎴 Thẻ bài toán #1 (LỰA CHỌN CHÍNH): Vinhomes Resident Service Copilot
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ QUICK PROBLEM CARD #1 (CHOSEN)                                          │
+│ QUICK PROBLEM CARD #1 (CHOSEN) — ĐỒNG BỘ VỚI WORKFLOW DIAGRAM           │
 │                                                                         │
-│ Bài toán (1 câu): Tiếp nhận, phân loại tự động mức độ khẩn cấp phản ánh │
-│ của cư dân trên App Vinhomes Resident, gán đúng đội kỹ thuật & draft SMS.│
+│ Bài toán (1 câu): Vinhomes Resident Service Copilot — Hệ thống AI hỗ trợ│
+│ CSKH tự động phân loại kép (Khiếu nại kỹ thuật vs Thủ tục hành chính),  │
+│ điều phối KTV và soạn nháp tin nhắn [DRAFT_ONLY] gửi cư dân.            │
 │ Công ty thành viên: [ ] VinFast   [ ] Xanh SM   [x] Vinhomes            │
 │                                                                         │
 │ Ai đang đau (Actor)?                                                    │
 │ - Cư dân Vinhomes: Bức xúc khi báo sự cố (chảy nước, mất điện, thang máy)│
-│   nhưng phải chờ nhiều giờ mới có phản hồi ban đầu.                     │
-│ - Nhân viên CSKH / BQL Tòa nhà: Quá tải đọc hàng nghìn ticket/ngày.     │
+│   hoặc hỏi thủ tục thi công nhưng phải chờ nhiều giờ mới có phản hồi.   │
+│ - Nhân viên CSKH / BQL Tòa nhà: Quá tải đọc và gõ tay hàng nghìn ticket.│
 │                                                                         │
-│ Workflow thủ công hiện tại (5 bước):                                    │
-│   1. Cư dân gửi ticket trên App ──> 2. Nhân viên CSKH đọc nội dung      │
-│   ──> 3. Phân loại chuyên mục sự cố (Điện/Nước/An ninh/Dịch vụ)         │
-│   ──> 4. Gán ticket cho Trưởng nhóm kỹ thuật/an ninh block tòa nhà      │
-│   ──> 5. Soạn tin nhắn xác nhận tiếp nhận gửi cư dân                    │
+│ Workflow thủ công hiện tại (5 bước đồng bộ sơ đồ 04):                   │
+│   1. Tiếp nhận đa kênh (App Vinhomes Resident, Hotline, Web Portal)     │
+│   ──> 2. [🔴 BOTTLENECK] Đọc & Phân loại kép (Sự cố vs Thủ tục)         │
+│   ──> 3. [🔄 3x HANDOFFS] Tra cứu KTV tòa nhà HOẶC Tra Sổ tay Cư dân    │
+│   ──> 4. [🔴 BOTTLENECK] Soạn thảo tin nhắn phản hồi chuẩn Vinhomes 5 sao│
+│   ──> 5. [🚨 EMERGENCY] Kích hoạt điều phối cứu hộ khẩn cấp (< 30s)     │
 │                                                                         │
-│ Bước nào tốn nhất? Bước 2, 3 & 5 (⏱ 12-15 phút/ticket)                  │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2, 3 & 5 (Hiểu ngôn ngữ tự   │
-│ nhiên, phân loại tag tự động, phát hiện sự cố khẩn và draft tin nhắn).  │
+│ Bước nào tốn nhất? Bước 2 & 4 (⏱ 12/18 phút/ticket - chiếm 67% thời gian)│
+│ AI có thể nhảy vào cải tiến ở đâu?                                      │
+│ - Bước 1: Trích xuất tự động metadata căn hộ, ảnh lỗi hiện trường.      │
+│ - Bước 2: Phân luồng kép (Dual-Stream) + Phát hiện cảm xúc bức xúc.     │
+│ - Bước 3: Tự động hóa điểm chuyển giao (Seamless Handoff) qua API KTV   │
+│   và RAG tra cứu chính xác điều khoản Sổ tay Cư dân.                    │
+│ - Bước 4: Soạn sẵn tin nháp [DRAFT_ONLY] cho CSKH 1-click phê duyệt.    │
+│ - Bước 5: Bypass hàng chờ thông thường, kích hoạt chuông báo động 24/7.  │
 │                                                                         │
 │ Đo thành công bằng gì (Metric có số)?                                   │
-│ - Giảm thời gian phản hồi ban đầu từ 2-4 tiếng ──> dưới 5 phút.         │
-│ - Tỉ lệ phân loại đúng bộ phận phụ trách đạt trên 96%.                  │
-│ - 100% sự cố khẩn cấp (cháy nổ, ngập nước nặng) được báo động tức thì. │
+│ - Giảm thời gian phản hồi ban đầu từ 2-4 tiếng ──> dưới 2 phút.         │
+│ - Tỉ lệ phân loại đúng chuyên mục và đúng KTV đạt >= 96%.               │
+│ - 100% sự cố khẩn cấp (cháy nổ, ngập nước, kẹt thang) báo động < 30s.   │
 │                                                                         │
 │ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM Feature  [ ] Agent     │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -80,9 +87,8 @@ Chọn **top 3 bài toán tiềm năng nhất** để phân tích sơ bộ:
 │ Công ty thành viên: [ ] VinFast   [x] Xanh SM   [ ] Vinhomes            │
 │                                                                         │
 │ Ai đang đau (Actor)? Tài xế (lo lắng hết pin giữa đường), Điều phối viên│
-│                                                                         │
-│ Workflow thủ công hiện tại: Nhận tin -> Tra GPS -> Tìm trạm sạc VinFast │
-│ -> Soạn tin nhắn chỉ đường -> Gọi xe cứu hộ sạc di động (nếu pin < 5%). │
+│ Workflow thủ công: Nhận tin -> Tra GPS -> Tìm trạm sạc -> Soạn tin nhắn │
+│ -> Kích hoạt xe sạc cứu hộ di động (nếu pin < 5%).                      │
 │ Bước tốn nhất: Tra cứu trạm và soạn tin (10 phút/lượt).                 │
 │ AI nhảy vào: Tự động lọc trạm và draft tin nhắn chuẩn an toàn.          │
 │ Đo thành công: Xử lý sự cố dưới 3 phút; 100% an toàn pin < 5%.          │
@@ -103,10 +109,9 @@ Chọn **top 3 bài toán tiềm năng nhất** để phân tích sơ bộ:
 │ Công ty thành viên: [ ] VinFast   [ ] Xanh SM   [x] Vinhomes            │
 │                                                                         │
 │ Ai đang đau (Actor)? Cư dân mới dọn về, Nhân viên lễ tân sảnh văn phòng.│
-│                                                                         │
-│ Workflow thủ công hiện tại: Cư dân hỏi trực tiếp/gọi điện -> Lễ tân tìm │
-│ file quy chế nội bộ -> Giải thích bằng lời -> Gửi biểu mẫu qua email.   │
-│ Bước tốn nhất: Tra cứu tài liệu và hướng dẫn điền form (15 phút/lượt).  │
+│ Workflow thủ công: Cư dân hỏi -> Lễ tân tìm file quy chế -> Hướng dẫn   │
+│ -> Gửi biểu mẫu qua email (mất 15 phút/lượt).                           │
+│ Bước tốn nhất: Tra cứu tài liệu và giải thích form đăng ký.             │
 │ AI nhảy vào: Chatbot tra cứu RAG sổ tay cư dân và gửi kèm link form.   │
 │ Đo thành công: Giải đáp tức thì < 15 giây; giảm 60% cuộc gọi lên lễ tân.│
 │ Quick Architecture: [x] LLM Feature (RAG QA)                            │
@@ -116,9 +121,10 @@ Chọn **top 3 bài toán tiềm năng nhất** để phân tích sơ bộ:
 ---
 
 ## 🎯 Quyết định lựa chọn bài toán cho Deep-Dive:
-Nhóm thống nhất chọn bài toán **"Thẻ #1: Vinhomes — Tiếp nhận & Xử lý Báo cáo Phản ánh của Cư dân"** để thực hiện phân tích sâu (Deep-Dive).
+Nhóm thống nhất chọn bài toán **"Thẻ #1: Vinhomes Resident Service Copilot — Kết hợp phân loại/chuyển khiếu nại và trợ lý thủ tục"** để thực hiện phân tích sâu (Deep-Dive).
 
-**Lý do lựa chọn:**
-1. **Quy mô ảnh hưởng lớn:** Hệ thống đô thị Vinhomes phục vụ hàng trăm nghìn hộ cư dân tại Vinhomes Ocean Park, Smart City, Grand Park... với lượng phản ánh rất lớn mỗi ngày.
-2. **Nỗi đau có thật và cấp bách:** Cư dân bức xúc nhất là sự chậm trễ trong khâu tiếp nhận thông tin ban đầu khi xảy ra sự cố kỹ thuật tại căn hộ.
-3. **Tính khả thi của AI:** Phù hợp hoàn hảo với năng lực hiểu ngôn ngữ tự nhiên (NLP) tiếng Việt của LLM để phân loại đa nhãn, phát hiện khẩn cấp và draft câu trả lời chuẩn mực dịch vụ Vinhomes, đồng thời có ranh giới con người kiểm duyệt (Human-in-the-loop) rõ ràng.
+**Lý do lựa chọn hoàn toàn bám sát tiêu chí:**
+1. **Gần với nhu cầu thực tế nhóm quan tâm:** Hệ sinh thái đô thị Vinhomes với hàng triệu cư dân là môi trường lý tưởng để AI tạo ra tác động xã hội to lớn.
+2. **Lượng yêu cầu lặp lại lớn:** Hàng nghìn phản ánh mỗi ngày giúp mô hình AI có cơ hội tối ưu hóa liên tục.
+3. **Dễ dàng đo lường:** Thời gian xử lý thủ công giảm từ 18 phút xuống dưới 2 phút, đo đếm định lượng minh bạch.
+4. **Human-in-the-loop vững chắc:** Với các khiếu nại nhạy cảm hoặc nguy cơ tranh chấp, luôn có nhân viên CSKH duyệt tin trước khi gửi qua tiền tố `[DRAFT_ONLY]`.
