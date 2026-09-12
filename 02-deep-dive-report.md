@@ -1,16 +1,18 @@
 # 02 — Problem Deep-Dive Report: Vin Smart Future
 
-**Dự án:** Hệ thống Trợ lý Điều phối Sự cố Pin & Cứu hộ Xe điện Thông minh  
-**Đơn vị áp dụng:** GSM (Xanh SM) — Phối hợp cùng Vin Smart Future  
+**Dự án:** Hệ thống AI Tiếp nhận, Phân loại & Điều hướng Báo cáo Phản ánh Cư dân (Vinhomes Resident Feedback Dispatcher)  
+**Đơn vị áp dụng:** Vinhomes — Phối hợp cùng Vin Smart Future  
 **Học viên thực hiện:** Quang Dũng
 
 ---
 
 ## 🏛️ 1. Bối cảnh & Vai trò
 
-Tại **Vin Smart Future**, chúng tôi nhận nhiệm vụ hiện đại hóa quy trình vận hành đội xe taxi điện cho **Xanh SM (GSM)**. Qua điều tra thực địa tại Trung tâm Điều vận Xanh SM Hà Nội, vấn đề nhức nhối nhất của các điều phối viên (Dispatchers) vào các khung giờ cao điểm là xử lý các cuộc gọi khẩn cấp khi xe điện của tài xế sắp cạn pin, bị kẹt trạm sạc hoặc gặp sự cố nguồn điện thực địa.
+Tôi là **Quang Dũng**, AI Product Engineer tại **Vin Smart Future**. Đơn vị chúng tôi được giao trọng trách nghiên cứu giải pháp AI giúp tối ưu hóa công tác quản lý vận hành đô thị cho **Vinhomes** — nhà phát triển bất động sản đô thị thông minh hàng đầu Việt Nam.
 
-Quy trình thủ công hiện tại yêu cầu điều phối viên phải thao tác qua 3 màn hình nghiệp vụ độc lập: Dashboard GPS xe, Bản đồ trạng thái trạm sạc VinFast, và Phần mềm nhắn tin nội bộ. Việc này gây lãng phí 12-15 phút cho mỗi ca sự cố, dẫn đến nguy cơ xe hết pin giữa đường gây tắc nghẽn và hủy cuốc.
+Khảo sát thực tế tại Ban Quản lý các đại đô thị Vinhomes (Vinhomes Ocean Park, Smart City, Grand Park), mỗi ngày hệ thống ứng dụng **Vinhomes Resident** tiếp nhận hàng nghìn phản ánh, khiếu nại từ cư dân. Các nội dung trải dài từ sự cố hạ tầng kỹ thuật (mất nước, rò rỉ đường ống, chập điện, kẹt thang máy), vi phạm trật tự an ninh (đỗ xe sai quy định, làm ồn ban đêm) đến thắc mắc về phí dịch vụ.
+
+Hiện nay, đội ngũ Chăm sóc Cư dân (CSKH) phải đọc thủ công từng ticket, phân loại chuyên mục và gán thủ công cho từng kỹ thuật viên/bảo vệ phụ trách block tòa nhà, sau đó tự viết tay câu trả lời phản hồi cho cư dân. Quy trình thủ công này gây nghẽn nghiêm trọng, làm chậm trễ thời gian xử lý sự cố và ảnh hưởng tiêu cực tới chỉ số hài lòng (CSAT) của cư dân Vinhomes.
 
 ---
 
@@ -18,84 +20,88 @@ Quy trình thủ công hiện tại yêu cầu điều phối viên phải thao 
 
 ### 3.1. Current-State Workflow Mapping (Quy trình vận hành hiện tại)
 
-Quy trình xử lý thủ công gồm 5 bước tuần tự:
+Quy trình xử lý thủ công một phản ánh của cư dân hiện gồm 5 bước tuần tự:
 
 ```text
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
 │ Bước 1          │       │ Bước 2          │       │ Bước 3          │       │ Bước 4          │
-│ Nhận cuộc gọi   │       │ Tra cứu tọa độ  │       │ Tìm kiếm trạm   │       │ Soạn tin nhắn   │
-│ báo hết pin     │ ────> │ định vị xe      │ ────> │ sạc còn trụ     │ ────> │ chỉ dẫn & gửi   │
-│                 │  🔄   │                 │  🔄   │                 │  🔄   │ cho tài xế      │
-│ Operator: Tổng đài      │ Operator: Điều vận      │ Operator: Điều vận      │ Operator: Điều vận
-│ Thời gian: 2 phút       │ Thời gian: 2 phút       │ Thời gian: 5 phút 🔴    │ Thời gian: 5 phút 🔴
-│ In: Cuộc gọi thoại      │ In: Biển số xe/Mã xe    │ In: Tọa độ GPS, loại xe │ In: Địa chỉ trạm sạc
-│ Out: Ticket sự cố       │ Out: Kinh độ, vĩ độ     │ Out: Danh sách trạm     │ Out: SMS / App Driver
+│ Cư dân gửi      │       │ Đọc hiểu &      │       │ Tra cứu & Gán   │       │ Soạn tin nhắn   │
+│ phản ánh trên   │ ────> │ phân loại nhãn  │ ────> │ bộ phận xử lý   │ ────> │ phản hồi xác    │
+│ App Vinhomes    │  🔄   │ sự cố           │  🔄   │ theo block nhà  │  🔄   │ nhận cho cư dân │
+│                 │       │                 │       │                 │       │                 │
+│ Actor: Cư dân   │       │ Actor: CSKH     │       │ Actor: CSKH     │       │ Actor: CSKH     │
+│ Thời gian: 2 phút       │ Thời gian: 5 phút 🔴    │ Thời gian: 4 phút       │ Thời gian: 6 phút 🔴
+│ In: Text/Ảnh sự cố      │ In: Nội dung ticket     │ In: Danh bạ kỹ thuật    │ In: Thông tin tiếp nhận
+│ Out: Ticket thô │       │ Out: Category/Priority  │ Out: Ticket gán KTV     │ Out: Tin nhắn xác nhận
 └─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
                                                                                        │
                                                                                        ▼
                                                                               ┌─────────────────┐
                                                                               │ Bước 5          │
-                                                                              │ Điều xe sạc pin │
-                                                                              │ cứu hộ di động  │
-                                                                              │ (nếu pin < 5%)  │
-                                                                              │ Operator: Điều vận
+                                                                              │ Kích hoạt quy   │
+                                                                              │ trình khẩn cấp  │
+                                                                              │ (nếu cháy/kẹt)  │
+                                                                              │                 │
+                                                                              │ Actor: CSKH     │
                                                                               │ Thời gian: 1 phút
-                                                                              │ Out: Lệnh cứu hộ│
+                                                                              │ Out: Báo động BQL
                                                                               └─────────────────┘
 
 Ký hiệu:
-- 🔄 Handoff: Điểm chuyển đổi thao tác/hệ thống giữa các màn hình nghiệp vụ.
-- 🔴 Bottleneck: Điểm nghẽn gây tốn nhiều thời gian và dễ nhầm lẫn thông tin nhất (Bước 3 & Bước 4).
-- ⏱ Tổng thời gian xử lý sự cố thủ công trung bình: 15 phút/lượt.
+- 🔄 Handoff: Điểm chuyển giao thông tin giữa cư dân -> CSKH -> Danh bạ vận hành -> Kỹ thuật viên hiện trường.
+- 🔴 Bottleneck: Bước 2 (Đọc & phân loại nhãn) và Bước 4 (Soạn văn bản phản hồi chuẩn mực cho cư dân), chiếm 11/18 phút.
+- ⏱ Tổng thời gian xử lý thủ công ban đầu trung bình: 18 phút/ticket.
+- Thời gian chờ thực tế của cư dân: Từ 2 đến 12 tiếng vào giờ cao điểm.
 ```
 
 ---
 
-### 3.2. Problem Statement (6-field) — Tiêu chuẩn Vin Smart Future
+### 3.2. Problem Statement (6-field) — Chuẩn Vin Smart Future
 
 | Trường thông tin | Nội dung chi tiết |
 |---|---|
-| **1. Actor / Operator** | Điều phối viên trực ca (Dispatcher) tại Trung tâm Điều vận Xanh SM toàn quốc. |
-| **2. Current Workflow** | Khi nhận cuộc gọi báo pin khẩn từ tài xế, điều phối viên nhập biển số để tìm xe trên bản đồ định vị nội bộ, mở Dashboard trạm sạc VinFast để tìm trụ sạc tương thích còn trống gần nhất, viết tin nhắn SMS/In-app hướng dẫn đường đi, hoặc gọi đội cứu hộ di động nếu pin quá thấp. Quy trình tốn trung bình 15 phút/lượt. |
-| **3. Bottleneck** | **Bước 3 & 4 (chiếm 10/15 phút):** Tra cứu thủ công loại cổng sạc phù hợp với dòng xe (VF5, VFe34, VF8) trên bản đồ và soạn thảo văn bản hướng dẫn thân thiện, chuẩn xác bằng tiếng Việt. |
-| **4. Business Impact** | Toàn hệ thống tiếp nhận trung bình ~85 sự cố pin/ngày tại các thành phố lớn. Tiêu tốn ~21.25 giờ làm việc/ngày của đội ngũ điều vận. Tăng thời gian chết (idle time) của xe, rò rỉ doanh thu ước tính hơn 1.2 tỷ VNĐ/năm do mất cuốc và gây ức chế tâm lý cho tài xế đối tác. |
-| **5. Success Metric** | 1. **Hiệu suất thời gian:** Giảm thời gian xử lý sự cố từ 15 phút xuống dưới **3 phút/lượt**.<br>2. **Độ chính xác kỹ thuật:** Đảm bảo 100% trạm sạc đề xuất tương thích với cổng sạc của dòng xe.<br>3. **An toàn vận hành:** 100% các trường hợp pin < 5% được cảnh báo và kích hoạt xe sạc cứu hộ di động, không để xe chết máy giữa đường. |
-| **6. Operational Boundary** | **Phạm vi cho phép:** AI được quyền đọc API tọa độ GPS xe, API trạng thái trạm sạc VinFast, và tự động soạn thảo tin nhắn hướng dẫn.<br>**Ranh giới cấm tuyệt đối (STRICT):**<br>- Mọi tin nhắn đề xuất của AI bắt buộc phải gắn tiền tố `[DRAFT_ONLY]` để điều phối viên con người kiểm duyệt trước khi bấm gửi (Bắt buộc Human-in-the-loop).<br>- Nếu dung lượng pin dưới 5%, AI **TUYỆT ĐỐI KHÔNG** được chỉ đường tới trạm sạc xa hơn 5km mà phải ngay lập tức đề xuất lệnh điều xe cứu hộ sạc di động: `{"action": "dispatch_mobile_charger", "reason": "..."}`. |
+| **1. Actor / Operator** | Nhân viên Chăm sóc Cư dân (CSKH) và Trưởng ca Quản lý Vận hành Tòa nhà tại các Khu Đô thị Vinhomes. |
+| **2. Current Workflow** | Cư dân tạo phản ánh trên App Vinhomes Resident. Nhân viên CSKH mở Dashboard quản trị, đọc nội dung tin nhắn, gán nhãn chuyên mục (Kỹ thuật/An ninh/Cảnh quan/Phí), tra cứu phân công nhân sự theo ca trực và tòa nhà, sau đó tự gõ câu trả lời tiếp nhận gửi lại cho cư dân. Quy trình kéo dài trung bình 18 phút/ticket và lên tới hàng giờ khi lượng phản ánh quá tải. |
+| **3. Bottleneck** | **Bước 2 & 4 (chiếm hơn 60% thời gian):** Đọc hiểu mô tả không có cấu trúc của cư dân (đôi khi viết tắt, cảm xúc bức xúc), phân tích mức độ ưu tiên và soạn thảo văn bản phản hồi đúng quy chuẩn văn phong dịch vụ chuẩn Vinhomes 5 sao. |
+| **4. Business Impact** | Mỗi đại đô thị tiếp nhận trung bình 1,500 - 2,500 tickets/tuần. Thời gian phản hồi chậm dẫn đến tỷ lệ khiếu nại leo thang (escalation) tăng 25%, cư dân gọi điện dồn dập lên tổng đài gây nghẽn đường dây nóng; nguy cơ xử lý chậm các sự cố hạ tầng kỹ thuật (vỡ ống nước, kẹt thang máy) gây thiệt hại lớn về tài sản. |
+| **5. Success Metric** | 1. **Tốc độ phản hồi ban đầu:** Rút ngắn thời gian từ 2-4 tiếng xuống **dưới 3 phút/ticket**.<br>2. **Độ chính xác phân loại:** Tỉ lệ phân loại đúng chuyên mục sự cố và gán đúng tổ kỹ thuật đạt **>= 96%**.<br>3. **An toàn & Cảnh báo khẩn cấp:** 100% phản ánh mang tính nguy cấp (cháy, ngập nước nghiêm trọng, kẹt thang máy, bạo lực) được phát hiện và kích hoạt chuông báo động tới Kỹ thuật trưởng trong vòng **dưới 30 giây**. |
+| **6. Operational Boundary** | **Phạm vi cho phép:** AI được đọc nội dung ticket, gắn tag phân loại, trích xuất căn hộ/vị trí, và soạn thảo tin nhắn xác nhận tiếp nhận dạng nháp (Draft).<br>**Ranh giới cấm tuyệt đối (STRICT):**<br>- Mọi tin nhắn phản hồi cư dân do AI soạn thảo **BẮT BUỘC** phải có tag tiền tố `[DRAFT_ONLY]` để nhân viên CSKH duyệt trước khi gửi (Tuyệt đối không để AI tự động gửi tin ra ngoài khi chưa có Human-in-the-loop).<br>- AI **TUYỆT ĐỐI KHÔNG** được hứa hẹn bồi thường tài chính, không cam kết thời gian hoàn thành vượt quá SLA, và không được xếp hàng xử lý thông thường nếu phát hiện dấu hiệu đe dọa tính mạng/an toàn cư dân. |
 
 ---
 
 ### 3.3. Future-State Flow & AI Fit Matrix
 
 #### A. Phân tích AI-Fit:
-* **Rule-based:** Chỉ xử lý được việc lọc bán kính cố định, nhưng không linh hoạt khi tổng hợp thông tin, không tự động viết được tin nhắn chỉ dẫn thân thiện, cá nhân hóa cho tài xế theo ngữ cảnh thời gian thực.
-* **Agentic Loop (Đa tác tử tự trị hoàn toàn):** Tiềm ẩn rủi ro quá lớn nếu AI tự động ra lệnh điều xe cứu hộ hoặc tự gửi tin sai khiến xe điện cạn pin giữa ngã tư giờ cao điểm.
-* **Lựa chọn tối ưu:** **LLM Feature kết hợp Rule Validation (Human-in-the-loop Co-pilot).** AI đóng vai trò Co-pilot chuẩn bị sẵn dữ liệu và bản nháp; điều phối viên con người giữ quyền quyết định cuối cùng.
+* **Rule-based (Regex/Từ khóa):** Dễ bỏ sót khi cư dân dùng tiếng lóng, viết tắt hoặc mô tả gián tiếp (ví dụ: *"hành lang tầng 8 đang có mùi khét lẹt"* -> Rule khó nhận diện chính xác mức độ khẩn cấp).
+* **Autonomous Agent (Tác tử tự hành):** Quá rủi ro nếu để Agent tự động chốt phương án bồi thường hoặc tự động đóng ticket cư dân mà không có con người kiểm tra.
+* **Lựa chọn tối ưu:** **LLM Feature kết hợp Human-in-the-loop (Co-pilot cho CSKH Vinhomes).** Mô hình LLM (Gemini 2.5 Flash) xử lý hiểu ngôn ngữ tự nhiên, phân loại tag và soạn nháp; nhân viên CSKH chỉ cần 1 click để kiểm tra và phê duyệt.
 
 #### B. Quy trình tương lai (Future-State Flow):
 
 ```text
 ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
 │ Bước 1          │       │ Bước 2          │       │ Bước 3          │       │ Bước 4          │
-│ Nhận cuộc gọi/  │       │ 🔵 AI Engine    │       │ 🔵 AI Engine    │       │ 🟢 Human Review │
-│ Cảnh báo pin ảo │ ────> │ Auto-fetch GPS  │ ────> │ Tạo Draft &     │ ────> │ Dispatcher      │
-│                 │       │ & Trạm sạc gần  │       │ Gắn [DRAFT_ONLY]│       │ Duyệt & Bấm gửi │
-│ Hệ thống tự động        │ Hệ thống tự động        │ Gemini 2.5 Flash        │ Con người (HITL)│
-│ Thời gian: 10s          │ Thời gian: 5s           │ Thời gian: 5s           │ Thời gian: 30s  │
+│ Cư dân gửi      │       │ 🔵 AI Engine    │       │ 🔵 AI Engine    │       │ 🟢 Human Review │
+│ phản ánh trên   │ ────> │ Phân loại tag,  │ ────> │ Gán KTV & Draft │ ────> │ CSKH 1-click    │
+│ App Vinhomes    │       │ mức ưu tiên     │       │ tin [DRAFT_ONLY]│       │ Duyệt & Gửi tin │
+│                 │       │                 │       │                 │       │                 │
+│ Hệ thống tự động│       │ Gemini 2.5 Flash│       │ Gemini 2.5 Flash│       │ Nhân viên (HITL)│
+│ Thời gian: Tức thì      │ Thời gian: 3s   │       │ Thời gian: 4s   │       │ Thời gian: 20s  │
 └─────────────────┘       └─────────────────┘       └─────────────────┘       └─────────────────┘
                                                             │
-                                                            ▼ (Nếu pin < 5%)
+                                                            ▼ (Nếu sự cố khẩn cấp: Cháy/Kẹt thang)
                                                    ┌─────────────────┐
-                                                   │ 🔵 AI Kích hoạt │
-                                                   │ Dispatch Mobile │
-                                                   │ Charger Lệnh    │
+                                                   │ 🔵 AI Báo động  │
+                                                   │ Dispatch Cứu hộ │
+                                                   │ Hotline Khẩn cấp│
                                                    └─────────────────┘
                                                             │
                                                             ▼
                                                    ↩️ Fallback Strategy:
-                                                   Nếu API Gemini gặp sự cố mạng hoặc timeout (>5s),
-                                                   hệ thống tự động chuyển sang hiển thị bảng danh sách
-                                                   trạm sạc theo khoảng cách thuần (Rule-based) để điều
-                                                   phối viên thao tác thủ công, không làm gián đoạn ca trực.
+                                                   Nếu mô hình AI phản hồi độ tự tin (confidence score)
+                                                   thấp (<85%) hoặc lỗi mạng, hệ thống tự động đẩy ticket
+                                                   vào hàng chờ thủ công truyền thống của CSKH, đảm bảo
+                                                   không một phản ánh nào của cư dân bị thất lạc.
 ```
 
 ---
@@ -103,14 +109,14 @@ Ký hiệu:
 ## 🏁 3. Phase 5 — EVALUATE: Quyết định triển khai
 
 ### AI Readiness Checklist:
-1. **Dữ liệu & API:** ✅ Có sẵn API định vị xe Xanh SM và API trạng thái trạm sạc VinFast theo thời gian thực.
-2. **Quản trị rủi ro & Ranh giới:** ✅ Đã thiết lập ranh giới an toàn kép qua thẻ tiền tố `[DRAFT_ONLY]` và ngưỡng pin tối thiểu 5%, kết hợp cơ chế Human-in-the-loop.
-3. **Mức độ sẵn sàng của Stakeholders:** ✅ Đội ngũ điều vận Xanh SM rất mong muốn có công cụ tự động hóa giảm tải áp lực trực tổng đài.
+1. **Dữ liệu & API:** ✅ Hệ thống Vinhomes Resident có sẵn dữ liệu hàng trăm nghìn ticket lịch sử được gán nhãn làm tập mẫu (Few-shot examples).
+2. **Quản trị rủi ro & Ranh giới:** ✅ Đảm bảo 100% tin nhắn có tiền tố `[DRAFT_ONLY]` và luôn qua bước duyệt của nhân viên CSKH (HITL), loại bỏ hoàn toàn rủi ro AI phát ngôn sai lệch.
+3. **Mức độ sẵn sàng của Stakeholders:** ✅ Ban Quản lý Vinhomes đang tìm kiếm giải pháp chuyển đổi số để giảm tải áp lực nhân sự cho đội ngũ vận hành tại các khu đô thị lớn.
 
-### Quyết định của Ban Dự Án Vin Smart Future:
-👉 **QUYẾT ĐỊNH: [x] GO (Triển khai xây dựng Prototype)**
+### Quyết định cuối cùng:
+👉 **QUYẾT ĐỊNH: [x] GO (Bắt đầu triển khai Prototype)**
 
 **Lý giải quyết định (Justification):**
-- **Hiệu quả rõ rệt:** Giảm thời gian xử lý sự cố từ 15 phút xuống dưới 3 phút (tiết kiệm hơn 80% thời gian xử lý).
-- **Chi phí & Độ phức tạp thấp:** Mô hình `gemini-2.5-flash` có tốc độ phản hồi mili-giây, chi phí API cực thấp và dễ dàng tích hợp vào hệ sinh thái ứng dụng của Vin Smart Future.
-- **Tính an toàn tuyệt đối:** Có quy chế phê duyệt Human-in-the-loop và phương án Fallback dự phòng, bảo vệ thương hiệu và cam kết chất lượng dịch vụ của Xanh SM.
+- **Hiệu quả kinh tế & Vận hành:** Cắt giảm hơn 80% thời gian xử lý thủ công ban đầu của CSKH (từ 18 phút xuống dưới 1 phút), nâng cao chỉ số hài lòng của cư dân.
+- **Tính khả thi kỹ thuật:** Năng lực xử lý tiếng Việt của `gemini-2.5-flash` cực kỳ xuất sắc trong việc phân tích sắc thái biểu cảm, trích xuất thực thể (phòng/tầng/sự cố) và draft văn phong trang trọng, lịch thiệp theo chuẩn Vinhomes.
+- **Chi phí tối ưu:** Chi phí API cho mỗi ticket chưa tới 50 VNĐ, mang lại ROI (Return on Investment) vượt trội so với chi phí thuê thêm nhân sự trực ca.

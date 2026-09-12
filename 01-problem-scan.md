@@ -2,63 +2,66 @@
 
 **Học viên:** Quang Dũng  
 **Đơn vị:** Vin Smart Future (Vingroup)  
-**Mảng trọng tâm:** Di chuyển xanh & Vận hành thông minh (Xanh SM, VinFast, Vinhomes)
+**Mảng trọng tâm:** Đô thị Thông minh & Quản lý Dịch vụ Cư dân (Vinhomes) — Hợp tác liên đơn vị (VinFast, Xanh SM)
 
 ---
 
 ## 🔍 Phase 1 — SCAN: Bảng quét cơ hội (4 Lenses)
 
-Quét qua các hoạt động nghiệp vụ thực tế của các công ty thành viên Vingroup dựa trên **4 Lenses**:
-1. **Lặp lại (Repetitive):** Tác vụ lặp đi lặp lại nhiều lần hằng ngày.
-2. **Tốn thời gian (Time-consuming):** Tác vụ ngốn thời gian xử lý thủ công của nhân viên/chuyên viên.
-3. **AI có thể tốt hơn (AI-upgrade):** Dịch vụ khách hàng, phân loại hoặc xử lý ngôn ngữ tự nhiên còn rập khuôn, chậm trễ.
-4. **Pain từ người khác (Stakeholder Pain):** Bottleneck gây tắc nghẽn, phàn nàn từ khách hàng hoặc nhân viên thực địa.
+Quét qua các hoạt động vận hành thực tế tại các công ty thành viên Vingroup dựa trên **4 Lenses**:
+1. **Lặp lại (Repetitive):** Tác vụ lặp đi lặp lại nhiều lần trong ngày với quy trình tương tự.
+2. **Tốn thời gian (Time-consuming):** Tác vụ ngốn nhiều giờ xử lý thủ công của đội ngũ vận hành.
+3. **AI có thể tốt hơn (AI-upgrade):** Dịch vụ khách hàng/cư dân còn rập khuôn, xử lý ngôn ngữ tự nhiên còn chậm.
+4. **Pain từ người khác (Stakeholder Pain):** Điểm nghẽn gây bức xúc, phàn nàn kéo dài từ cư dân hoặc nhân viên thực địa.
 
 ### Danh sách các bài toán phát hiện:
 
 | # | Công ty thành viên | Lens áp dụng | Mô tả bài toán & Bottleneck thực tế |
 |---|--------------------|--------------|--------------------------------------|
-| 1 | **Xanh SM (GSM)** | Tốn thời gian | Điều phối viên xử lý thủ công các báo cáo khẩn cấp từ tài xế về sự cố cạn kiệt pin thực địa hoặc lỗi trụ sạc (mất 12-15 phút/cuộc gọi để tra cứu tọa độ, tìm trạm trống và draft tin nhắn chỉ đường). |
-| 2 | **VinFast** | Lặp lại | Đối chiếu và so khớp dữ liệu hóa đơn sạc điện từ hàng nghìn trụ sạc đối tác công cộng với chỉ số điện năng tiêu thụ thực tế của từng xe điện hàng tuần. |
-| 3 | **Vinhomes** | AI-upgrade | Phân loại tự động và route các phản ánh, khiếu nại của cư dân (sự cố điện nước, an ninh, vệ sinh tòa nhà) gửi qua ứng dụng Vinhomes Resident tới đúng tổ kỹ thuật và draft phản hồi theo quy chuẩn. |
-| 4 | **Xanh SM (GSM)** | Pain từ người khác | Tự động phân tích lý do khách hàng hủy chuyến từ file ghi âm tổng đài và ghi chú nhanh của tài xế để nhận diện các điểm đón thường xuyên bị trễ do nghẽn đường. |
-| 5 | **Vinmec** | Tốn thời gian | Trích xuất và soạn thảo tóm tắt hồ sơ bệnh án xuất viện (Discharge Summary) từ kết quả xét nghiệm và ghi chú lâm sàng của bác sĩ, giảm tải thời gian hành chính cho đội ngũ y tế. |
-| 6 | **Vinpearl** | AI-upgrade | Hỗ trợ phân tích đánh giá đa kênh (Google Maps, Agoda, Booking.com) và tự động tạo phiếu hỗ trợ khẩn cấp nếu phát hiện phản hồi tiêu cực về vệ sinh phòng nghỉ hoặc thái độ phục vụ. |
+| 1 | **Vinhomes** | Tốn thời gian & Pain từ người khác | **Tiếp nhận, phân loại và điều hướng báo cáo phản ánh của cư dân trên App Vinhomes Resident:** Nhân viên CSKH/Ban quản lý phải đọc thủ công hàng trăm phản ánh mỗi ngày (rò rỉ nước, hỏng đèn hành lang, ồn ào, thủ tục phí), phân loại tag sự cố và gán về từng tổ kỹ thuật block tòa nhà, dẫn đến phản hồi ban đầu chậm trễ (từ 2-12 tiếng). |
+| 2 | **Vinhomes** | Lặp lại | Soạn thảo câu trả lời và văn bản hướng dẫn thủ tục cư dân (đăng ký thi công nội thất, đăng ký thẻ cư dân/vé gửi xe) lặp đi lặp lại theo biểu mẫu. |
+| 3 | **Xanh SM (GSM)** | Tốn thời gian | Điều phối viên xử lý thủ công các báo cáo khẩn cấp từ tài xế về sự cố cạn kiệt pin hoặc tìm trạm sạc trống tương thích gần nhất. |
+| 4 | **VinFast** | Lặp lại | Đối chiếu và so khớp dữ liệu hóa đơn sạc điện từ các trạm sạc đối tác công cộng với mức điện năng thực tế của xe theo tuần. |
+| 5 | **Vinpearl** | AI-upgrade | Tổng hợp, phân loại cảm xúc (sentiment) và lọc phản ánh tiêu cực từ các kênh OTA (Booking, Agoda, Google Maps) để báo động cho Quản lý khách sạn. |
+| 6 | **Vinmec** | Tốn thời gian | Trích xuất và soạn thảo tóm tắt hồ sơ xuất viện (Discharge Summary) từ ghi chú lâm sàng của bác sĩ cho bệnh nhân. |
 
 ---
 
 ## 🃏 Phase 2 — QUICK-ASSESS: 3 Quick Problem Cards
 
-Chọn lọc **3 bài toán tiềm năng nhất** từ danh sách trên:
+Chọn **top 3 bài toán tiềm năng nhất** để phân tích sơ bộ:
 
 ---
 
-### 🎴 Thẻ bài toán #1: Xanh SM — Xử lý sự cố sạc pin và điều phối cứu hộ thực địa
+### 🎴 Thẻ bài toán #1 (LỰA CHỌN CHÍNH): Vinhomes — Tiếp nhận & Xử lý Báo cáo Phản ánh của Cư dân
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ QUICK PROBLEM CARD #1                                                   │
+│ QUICK PROBLEM CARD #1 (CHOSEN)                                          │
 │                                                                         │
-│ Bài toán (1 câu): Hỗ trợ điều phối viên Xanh SM tra cứu trạm sạc trống,  │
-│ soạn thảo chỉ dẫn đường đi và kích hoạt xe sạc cứu hộ di động khẩn cấp. │
-│ Công ty thành viên: [x] Xanh SM (GSM)   [ ] VinFast   [ ] Vinhomes      │
+│ Bài toán (1 câu): Tiếp nhận, phân loại tự động mức độ khẩn cấp phản ánh │
+│ của cư dân trên App Vinhomes Resident, gán đúng đội kỹ thuật & draft SMS.│
+│ Công ty thành viên: [ ] VinFast   [ ] Xanh SM   [x] Vinhomes            │
 │                                                                         │
 │ Ai đang đau (Actor)?                                                    │
-│ - Tài xế Xanh SM: Đang mắc kẹt trên đường, lo lắng hết pin dừng xe.     │
-│ - Điều phối viên (Dispatcher): Quá tải thao tác trên nhiều dashboard.   │
+│ - Cư dân Vinhomes: Bức xúc khi báo sự cố (chảy nước, mất điện, thang máy)│
+│   nhưng phải chờ nhiều giờ mới có phản hồi ban đầu.                     │
+│ - Nhân viên CSKH / BQL Tòa nhà: Quá tải đọc hàng nghìn ticket/ngày.     │
 │                                                                         │
 │ Workflow thủ công hiện tại (5 bước):                                    │
-│   1. Nhận cuộc gọi khẩn ──> 2. Tra cứu tọa độ GPS xe trên hệ thống     │
-│   ──> 3. Lọc trạm sạc VinFast còn trụ trống ──> 4. Soạn SMS chỉ đường  │
-│   ──> 5. Gọi đội xe cứu hộ sạc di động (nếu pin < 5%)                   │
+│   1. Cư dân gửi ticket trên App ──> 2. Nhân viên CSKH đọc nội dung      │
+│   ──> 3. Phân loại chuyên mục sự cố (Điện/Nước/An ninh/Dịch vụ)         │
+│   ──> 4. Gán ticket cho Trưởng nhóm kỹ thuật/an ninh block tòa nhà      │
+│   ──> 5. Soạn tin nhắn xác nhận tiếp nhận gửi cư dân                    │
 │                                                                         │
-│ Bước nào tốn thời gian/lỗi nhất? Bước 3 & 4 (⏱ 10 phút/lượt)           │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 3 & 4 (Đồng bộ vị trí GPS,    │
-│ tự động lọc trạm phù hợp theo loại xe và draft tin nhắn chỉ dẫn chuẩn). │
+│ Bước nào tốn nhất? Bước 2, 3 & 5 (⏱ 12-15 phút/ticket)                  │
+│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2, 3 & 5 (Hiểu ngôn ngữ tự   │
+│ nhiên, phân loại tag tự động, phát hiện sự cố khẩn và draft tin nhắn).  │
 │                                                                         │
 │ Đo thành công bằng gì (Metric có số)?                                   │
-│ - Rút ngắn thời gian xử lý sự cố từ 15 phút ──> dưới 3 phút/lượt.      │
-│ - Tỉ lệ chỉ dẫn đúng loại trụ sạc còn trống đạt trên 98%.              │
+│ - Giảm thời gian phản hồi ban đầu từ 2-4 tiếng ──> dưới 5 phút.         │
+│ - Tỉ lệ phân loại đúng bộ phận phụ trách đạt trên 96%.                  │
+│ - 100% sự cố khẩn cấp (cháy nổ, ngập nước nặng) được báo động tức thì. │
 │                                                                         │
 │ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM Feature  [ ] Agent     │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -66,77 +69,56 @@ Chọn lọc **3 bài toán tiềm năng nhất** từ danh sách trên:
 
 ---
 
-### 🎴 Thẻ bài toán #2: Vinhomes — Phân loại & Phản hồi khiếu nại cư dân
+### 🎴 Thẻ bài toán #2: Xanh SM — Điều phối sự cố sạc pin và cứu hộ di động
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ QUICK PROBLEM CARD #2                                                   │
 │                                                                         │
-│ Bài toán (1 câu): Tự động phân loại mức độ khẩn cấp phản ánh của cư dân  │
-│ Vinhomes Resident và điều phối tới đúng đội kỹ thuật tòa nhà.           │
-│ Công ty thành viên: [ ] VinFast   [ ] Xanh SM   [x] Vinhomes            │
+│ Bài toán (1 câu): Hỗ trợ điều phối viên Xanh SM lọc trạm sạc trống và    │
+│ kích hoạt xe sạc cứu hộ di động khi xe cạn kiệt pin.                    │
+│ Công ty thành viên: [ ] VinFast   [x] Xanh SM   [ ] Vinhomes            │
 │                                                                         │
-│ Ai đang đau (Actor)?                                                    │
-│ - Cư dân: Bức xúc khi sự cố rò rỉ nước, hỏng thang máy phản hồi chậm.   │
-│ - Nhân viên CSKH/Ban quản lý tòa nhà: Đọc thủ công hàng trăm tin/ngày.  │
+│ Ai đang đau (Actor)? Tài xế (lo lắng hết pin giữa đường), Điều phối viên│
 │                                                                         │
-│ Workflow thủ công hiện tại (4 bước):                                    │
-│   1. Nhận ticket trên App ──> 2. Nhân viên đọc nội dung và phân loại    │
-│   ──> 3. Chuyển ticket cho Trưởng nhóm kỹ thuật từng block tòa nhà      │
-│   ──> 4. Soạn email/thông báo xác nhận tiếp nhận cho cư dân            │
-│                                                                         │
-│ Bước nào tốn thời gian/lỗi nhất? Bước 2 & 4 (⏱ 15 phút/ticket)          │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 2 & 4 (Phân loại tag sự cố   │
-│ và draft sẵn tin nhắn xác nhận chuẩn văn phong Vinhomes).                │
-│                                                                         │
-│ Đo thành công bằng gì (Metric có số)?                                   │
-│ - Giảm thời gian phản hồi ban đầu từ 2 giờ ──> dưới 5 phút.             │
-│ - Tỉ lệ phân loại chính xác bộ phận phụ trách đạt >= 95%.                │
-│                                                                         │
-│ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM Feature  [ ] Agent     │
+│ Workflow thủ công hiện tại: Nhận tin -> Tra GPS -> Tìm trạm sạc VinFast │
+│ -> Soạn tin nhắn chỉ đường -> Gọi xe cứu hộ sạc di động (nếu pin < 5%). │
+│ Bước tốn nhất: Tra cứu trạm và soạn tin (10 phút/lượt).                 │
+│ AI nhảy vào: Tự động lọc trạm và draft tin nhắn chuẩn an toàn.          │
+│ Đo thành công: Xử lý sự cố dưới 3 phút; 100% an toàn pin < 5%.          │
+│ Quick Architecture: [x] LLM Feature (Co-pilot)                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### 🎴 Thẻ bài toán #3: VinFast — Chẩn đoán sơ bộ mô tả lỗi xe điện từ khách hàng
+### 🎴 Thẻ bài toán #3: Vinhomes — Trợ lý ảo giải đáp thủ tục cư dân 24/7
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ QUICK PROBLEM CARD #3                                                   │
 │                                                                         │
-│ Bài toán (1 câu): Trợ lý tiếp nhận ngôn ngữ tự nhiên, phân tích mô tả   │
-│ tiếng ồn/hiện tượng lạ của xe điện VF5/VF8 để đề xuất mã lỗi sơ bộ.    │
-│ Công ty thành viên: [x] VinFast   [ ] Xanh SM   [ ] Vinhomes            │
+│ Bài toán (1 câu): Giải đáp tự động các câu hỏi về thủ tục đăng ký thi   │
+│ công nội thất, cấp thẻ cư dân và nội quy khu đô thị Vinhomes.           │
+│ Công ty thành viên: [ ] VinFast   [ ] Xanh SM   [x] Vinhomes            │
 │                                                                         │
-│ Ai đang đau (Actor)?                                                    │
-│ - Chủ xe VinFast: Khó diễn tả chính xác thuật ngữ kỹ thuật ô tô.        │
-│ - Kỹ thuật viên tiếp nhận dịch vụ (Service Advisor): Mất nhiều thời     │
-│   gian hỏi lặp đi lặp lại triệu chứng của xe.                           │
+│ Ai đang đau (Actor)? Cư dân mới dọn về, Nhân viên lễ tân sảnh văn phòng.│
 │                                                                         │
-│ Workflow thủ công hiện tại (4 bước):                                    │
-│   1. Khách hàng mang xe đến Xưởng dịch vụ và mô tả bằng lời nói         │
-│   ──> 2. KTV tra cứu sổ tay kỹ thuật và danh sách mã lỗi DTC            │
-│   ──> 3. Cắm máy chẩn đoán quét OBD-II                                  │
-│   ──> 4. Lập phiếu báo giá và kế hoạch sửa chữa                         │
-│                                                                         │
-│ Bước nào tốn thời gian/lỗi nhất? Bước 1 & 2 (⏱ 20 phút trao đổi)        │
-│ AI có thể nhảy vào hỗ trợ ở bước nào? Bước 1 (Trợ lý AI trên app VinFast│
-│ thu thập trước mô tả triệu chứng và gợi ý bộ phận nghi vấn).            │
-│                                                                         │
-│ Đo thành công bằng gì (Metric có số)?                                   │
-│ - Giảm thời gian tiếp nhận xe tại xưởng từ 30 phút xuống dưới 12 phút.  │
-│ - Khách hàng đặt trước lịch kiểm tra đúng nhóm kỹ thuật viên đạt 90%.   │
-│                                                                         │
-│ Quick Architecture: [ ] No AI  [ ] Rule  [x] LLM Feature  [ ] Agent     │
+│ Workflow thủ công hiện tại: Cư dân hỏi trực tiếp/gọi điện -> Lễ tân tìm │
+│ file quy chế nội bộ -> Giải thích bằng lời -> Gửi biểu mẫu qua email.   │
+│ Bước tốn nhất: Tra cứu tài liệu và hướng dẫn điền form (15 phút/lượt).  │
+│ AI nhảy vào: Chatbot tra cứu RAG sổ tay cư dân và gửi kèm link form.   │
+│ Đo thành công: Giải đáp tức thì < 15 giây; giảm 60% cuộc gọi lên lễ tân.│
+│ Quick Architecture: [x] LLM Feature (RAG QA)                            │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🎯 Kết luận lựa chọn bài toán cho Deep-Dive:
-Nhóm thống nhất chọn **Thẻ bài toán #1: Xanh SM — Xử lý sự cố sạc pin và điều phối cứu hộ thực địa** để thực hiện phân tích sâu (Deep-Dive).
+## 🎯 Quyết định lựa chọn bài toán cho Deep-Dive:
+Nhóm thống nhất chọn bài toán **"Thẻ #1: Vinhomes — Tiếp nhận & Xử lý Báo cáo Phản ánh của Cư dân"** để thực hiện phân tích sâu (Deep-Dive).
 
-**Lý do chọn:**
-1. Tác động kinh doanh tức thì: Mỗi xe taxi điện ngừng hoạt động gây rò rỉ trực tiếp doanh thu cuốc xe của Xanh SM.
-2. Ranh giới an toàn (Operational Boundary) rõ ràng: Có điều kiện pin < 5% mang tính an toàn cao, rất phù hợp để xây dựng và kiểm thử bản mẫu prompt prototype (HITL và Fallback).
+**Lý do lựa chọn:**
+1. **Quy mô ảnh hưởng lớn:** Hệ thống đô thị Vinhomes phục vụ hàng trăm nghìn hộ cư dân tại Vinhomes Ocean Park, Smart City, Grand Park... với lượng phản ánh rất lớn mỗi ngày.
+2. **Nỗi đau có thật và cấp bách:** Cư dân bức xúc nhất là sự chậm trễ trong khâu tiếp nhận thông tin ban đầu khi xảy ra sự cố kỹ thuật tại căn hộ.
+3. **Tính khả thi của AI:** Phù hợp hoàn hảo với năng lực hiểu ngôn ngữ tự nhiên (NLP) tiếng Việt của LLM để phân loại đa nhãn, phát hiện khẩn cấp và draft câu trả lời chuẩn mực dịch vụ Vinhomes, đồng thời có ranh giới con người kiểm duyệt (Human-in-the-loop) rõ ràng.
